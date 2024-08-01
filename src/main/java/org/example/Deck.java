@@ -2,32 +2,41 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Deck {
+public class Deck implements DeckActionsInterface {
     private ArrayList<Card> cards;
+    private Set<Card> dealtCards;
 
     public Deck() {
         cards = new ArrayList<>();
-        String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
-        String[] values = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
-
-        for (String suit : suits) {
-            for (String value : values) {
+        dealtCards = new HashSet<>();
+        for (Suits suit : Suits.values()) {
+            for (Values value : Values.values()) {
                 cards.add(new Card(suit, value));
             }
         }
     }
 
+    @Override
     public void shuffle() {
         Collections.shuffle(cards);
     }
 
+    @Override
     public Card dealCard() {
-        return cards.remove(0);
+        for (Card card : cards) {
+            if (!dealtCards.contains(card)) {
+                dealtCards.add(card);
+                return card;
+            }
+        }
+        return null; // All cards have been dealt
     }
 
+    @Override
     public int getRemainingCards() {
-        return cards.size();
+        return cards.size() - dealtCards.size();
     }
 }
-

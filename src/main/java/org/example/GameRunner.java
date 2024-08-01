@@ -37,7 +37,7 @@ public class GameRunner {
                 System.out.print("Do you want to hit, stand, or double down? (h/s/d): ");
                 String action = scanner.next();
 
-                if (action.equals("h")) {
+                if (action.equalsIgnoreCase("h")) {
                     player.addCardToHand(deckActions.dealCard());
                     System.out.println("Your hand: " + player.getHand());
 
@@ -46,7 +46,7 @@ public class GameRunner {
                         player.adjustBalance(-bet);
                         playerTurn = false;
                     }
-                } else if (action.equals("d") && !doubledDown) {
+                } else if (action.equalsIgnoreCase("d") && !doubledDown) {
                     if (bet * 2 > player.getBalance()) {
                         System.out.println("You don't have enough balance to double down.");
                         continue;
@@ -64,10 +64,14 @@ public class GameRunner {
                     } else {
                         playerTurn = false;
                     }
-                } else {
+                } else if (action.equalsIgnoreCase("s")) {
                     playerTurn = false;
+                } else {
+                    System.out.println("Invalid input. Please enter 'h' to hit, 's' to stand, or 'd' to double down.");
                 }
             }
+
+            System.out.println("Dealer's hand: " + dealer.getHand());
 
             if (player.calculateHandValue() <= 21) {
                 while (dealer.calculateHandValue() < 17) {
@@ -101,5 +105,3 @@ public class GameRunner {
         scanner.close();
     }
 }
-
-

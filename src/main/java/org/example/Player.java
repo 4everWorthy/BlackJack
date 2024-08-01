@@ -1,22 +1,15 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Player {
-    private ArrayList<Card> hand;
     private int balance;
+    private List<String> hand;
 
-    public Player(int initialBalance) {
-        hand = new ArrayList<>();
-        balance = initialBalance;
-    }
-
-    public void addCardToHand(Card card) {
-        hand.add(card);
-    }
-
-    public ArrayList<Card> getHand() {
-        return hand;
+    public Player(int balance) {
+        this.balance = balance;
+        this.hand = new ArrayList<>();
     }
 
     public int getBalance() {
@@ -27,31 +20,45 @@ public class Player {
         balance += amount;
     }
 
-    public int calculateHandValue() {
-        int value = 0;
-        int aceCount = 0;
+    public List<String> getHand() {
+        return new ArrayList<>(hand);
+    }
 
-        for (Card card : hand) {
-            String cardValue = card.getValue();
-            if (cardValue.equals("Jack") || cardValue.equals("Queen") || cardValue.equals("King")) {
-                value += 10;
-            } else if (cardValue.equals("Ace")) {
-                aceCount++;
-                value += 11;
-            } else {
-                value += Integer.parseInt(cardValue);
-            }
-        }
-
-        while (aceCount > 0 && value > 21) {
-            value -= 10;
-            aceCount--;
-        }
-
-        return value;
+    public void addCardToHand(String card) {
+        hand.add(card);
     }
 
     public void resetHand() {
         hand.clear();
+    }
+
+    public int calculateHandValue() {
+        int value = 0;
+        int aces = 0;
+
+        for (String card : hand) {
+            String rank = card.split(" ")[0];
+            switch (rank) {
+                case "Ace":
+                    aces++;
+                    value += 11;
+                    break;
+                case "King":
+                case "Queen":
+                case "Jack":
+                case "10":
+                    value += 10;
+                    break;
+                default:
+                    value += Integer.parseInt(rank);
+            }
+        }
+
+        while (value > 21 && aces > 0) {
+            value -= 10;
+            aces--;
+        }
+
+        return value;
     }
 }
